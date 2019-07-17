@@ -395,6 +395,7 @@ function _runServer(argv) {
 
   const parseSamlRequest = function(req, res, next) {
     samlp.parseRequest(req, function(err, data) {
+      console.log('Parsing Saml Request');
       if (err) {
         return res.render('error', {
           message: 'SAML AuthnRequest Parse Error: ' + err.message,
@@ -412,6 +413,8 @@ function _runServer(argv) {
         };
         console.log('Received AuthnRequest => \n', req.authnRequest);
       }
+      // Propagate relaystate
+      idpOptions.RelayState = req.query.RelayState || req.body.RelayState;
       return showUser(req, res, next);
     })
   };
